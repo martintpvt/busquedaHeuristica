@@ -79,10 +79,12 @@ def aStar(graph, start, goal):
             newCost = costSoFar[current] + graph.cost(current, successor)
             if successor not in costSoFar or newCost < costSoFar[successor]:
                 costSoFar[successor] = newCost
-                priority = newCost + heuristic(successor)
+                priority = newCost
+                # priority = newCost + heuristic(successor)
                 openL.append((successor, priority))
                 parents[successor] = current
-     
+    
+    print(costSoFar[goal])
     return parents
  
  
@@ -108,51 +110,39 @@ def main(argv):
     Example:
       python aStarRomania.py Timisoara
     """
-    if len(argv) != 1:
+    if len(argv) != 2:
         print (main.__doc__)
     else:
         startCity = argv[0]
+
  
         # Always Bucarest due to heuristic is given for this end city
-        endCity = 'Bucarest'
+        endCity = argv[1]
  
         Romania = Graph()  # Builds Romania Graph
  
         # Adding edges (adjacency list)
         Romania.edges = {
-            'Arad': ['Zerind', 'Timisoara', 'Sibiu'],
-            'Zerind': ['Arad', 'Oradea'],
-            'Timisoara': ['Arad', 'Lugoj'],
-            'Oradea': ['Zerind', 'Sibiu'],
-            'Lugoj': ['Timisoara', 'Mehadia'],
-            'Mehadia': ['Lugoj', 'Dobreta'],
-            'Dobreta': ['Mehadia', 'Craiova'],
-            'Sibiu': ['Arad', 'Oradea', 'Rimnicu', 'Fagaras'],
-            'Rimnicu': ['Sibiu', 'Craiova', 'Pitesi'],
-            'Craiova': ['Dobreta', 'Rimnicu', 'Pitesi'],
-            'Fagaras': ['Sibiu', 'Bucarest'],
-            'Pitesi': ['Rimnicu', 'Craiova', 'Bucarest'],
-            'Bucarest': ['Fagaras', 'Pitesi']
+            'O': ['A', 'B', 'C'],
+            'A': ['O', 'B', 'D'],
+            'B': ['O', 'A', 'C', 'D'],
+            'C': ['O', 'B', 'E'],
+            'D': ['A', 'B', 'E', 'T'],
+            'E': ['C', 'D', 'T'],
+            'T': ['D', 'E']
         }
- 
         # Adding weights to edges
         Romania.weights = {
-            ('Arad', 'Zerind') : 75, ('Arad', 'Timisoara') : 118, ('Arad', 'Sibiu') : 140,
-            ('Zerind', 'Arad') : 75, ('Zerind', 'Oradea') : 71,
-            ('Timisoara', 'Arad') : 118, ('Timisoara', 'Lugoj') : 111,
-            ('Oradea', 'Zerind') : 71, ('Oradea', 'Sibiu') : 151,
-            ('Lugoj', 'Timisoara') : 111, ('Lugoj', 'Mehadia') : 70,
-            ('Mehadia', 'Lugoj') : 70, ('Mehadia', 'Dobreta') : 75,
-            ('Dobreta', 'Mehadia') : 75, ('Dobreta', 'Craiova') : 120,
-            ('Sibiu', 'Arad') : 140, ('Sibiu', 'Oradea') : 151, ('Sibiu', 'Rimnicu') : 80, ('Sibiu', 'Fagaras') : 99,
-            ('Rimnicu', 'Sibiu') : 80, ('Rimnicu', 'Craiova') : 146, ('Rimnicu', 'Pitesi') : 97,
-            ('Craiova', 'Dobreta') : 120, ('Craiova', 'Rimnicu') : 146, ('Craiova', 'Pitesi') : 138,
-            ('Fagaras', 'Sibiu') : 99, ('Fagaras', 'Bucarest') : 211,
-            ('Pitesi', 'Rimnicu') : 97, ('Pitesi', 'Craiova') : 138, ('Pitesi', 'Bucarest') : 101,
-            ('Bucarest', 'Fagaras') : 211, ('Bucarest', 'Pitesi') : 101
+            ('O', 'A') : 2, ('O', 'B') : 5, ('O', 'C') : 4,
+            ('A', 'O') : 2, ('A', 'B') : 2,('A', 'D') : 7,
+            ('B', 'O') : 5, ('B', 'A') : 2,('B', 'C') : 1,('B', 'D') : 4,('B', 'E') : 3,
+            ('C', 'O') : 4,('C', 'B') : 1,('C', 'E') : 4,
+            ('D', 'A') : 7,('D', 'B') : 4,('D', 'E') : 1,('D', 'T') : 5,
+            ('E', 'C') : 4,('E', 'D') : 1,('E', 'T') : 7,
+            ('T', 'D') : 5,('T', 'E') : 7
         }
  
-        if argv[0] not in Romania.edges.keys():
+        if argv[0] not in Romania.edges.keys() or argv[1] not in Romania.edges.keys():
             print ("Ciudad no existe")
             return
  
